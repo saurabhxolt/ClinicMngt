@@ -2,23 +2,32 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import initialSiteConfig from '../data/siteConfig';
 
-const SiteConfigContext = createContext();
+const SiteConfigContext = createContext(null);
+const CONFIG_VERSION = "v3_warud_official";
 
 export function SiteConfigProvider({ children }) {
     const [config, setConfig] = useState(() => {
+        const savedVersion = localStorage.getItem('clinic_config_version');
         const saved = localStorage.getItem('clinic_site_config');
-        if (saved) {
-            try {
-                return JSON.parse(saved);
-            } catch (e) {
-                console.error("Failed to parse site config from localStorage", e);
-            }
+
+        // If version mismatch or missing, force sync to latest master config
+        if (savedVersion !== CONFIG_VERSION || !saved) {
+            localStorage.setItem('clinic_config_version', CONFIG_VERSION);
+            localStorage.setItem('clinic_site_config', JSON.stringify(initialSiteConfig));
+            return initialSiteConfig;
         }
-        return initialSiteConfig;
+
+        try {
+            return JSON.parse(saved);
+        } catch (e) {
+            console.error("Failed to parse site config from localStorage", e);
+            return initialSiteConfig;
+        }
     });
 
     useEffect(() => {
         localStorage.setItem('clinic_site_config', JSON.stringify(config));
+        localStorage.setItem('clinic_config_version', CONFIG_VERSION);
     }, [config]);
 
     // Helper to update any specific section
@@ -148,6 +157,7 @@ export function SiteConfigProvider({ children }) {
     const resetToFactoryDefault = () => {
         setConfig(initialSiteConfig);
         localStorage.removeItem('clinic_site_config');
+        localStorage.setItem('clinic_config_version', CONFIG_VERSION);
     };
 
     return (
@@ -175,7 +185,22 @@ export function SiteConfigProvider({ children }) {
 export function useSiteConfig() {
     const context = useContext(SiteConfigContext);
     if (!context) {
-        throw new Error("useSiteConfig must be used within a SiteConfigProvider");
+        return {
+            config: initialSiteConfig,
+            updateClinicInfo: () => {},
+            updateSection: () => {},
+            saveDoctor: () => {},
+            deleteDoctor: () => {},
+            saveService: () => {},
+            deleteService: () => {},
+            saveBlog: () => {},
+            deleteBlog: () => {},
+            saveTestimonial: () => {},
+            deleteTestimonial: () => {},
+            saveFaq: () => {},
+            deleteFaq: () => {},
+            resetToFactoryDefault: () => {}
+        };
     }
     return context;
 }

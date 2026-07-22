@@ -1,9 +1,9 @@
 export const CLINIC = {
-    name: "Skin & Imaging Clinic",
-    tagline: "Advanced Dermatology & Diagnostic Care",
-    phone: "+91 98765 43210",
-    email: "care@skinandimagingclinic.com",
-    address: "Central Avenue, Near Medical Square, Nagpur, Maharashtra"
+    name: "Vandana Diagnostic & Dr. Richa Skin Clinic",
+    tagline: "Advanced Dermatology, Aesthetic Surgery & Diagnostic Radiology Center",
+    phone: "+91 8421729984",
+    email: "care@vandanadiagnostic.com",
+    address: "Shrirao Wadi, Behind Gawande Jewellers, Pandhurna Chawk, Warud, Maharashtra 444906"
 };
 
 export const NAVIGATION = [

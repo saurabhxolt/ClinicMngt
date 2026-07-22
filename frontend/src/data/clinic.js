@@ -7,8 +7,8 @@ export const clinicInfo = {
     altPhone: "+91 8421729984",
     whatsapp: "+918421729984",
     email: "care@vandanadiagnostic.com",
-    address: "Shriram Wadi, Opposite Yawalakar Sabhagruha, Approach Road, Warud - 444906",
-    locationLandmark: "Opposite Yawalakar Sabhagruha, Warud",
+    address: "Shrirao Wadi, Behind Gawande Jewellers, Pandhurna Chawk, Warud, Maharashtra 444906",
+    locationLandmark: "Behind Gawande Jewellers, Pandhurna Chawk, Warud",
     googleMapsEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3714.225!2d78.1144!3d21.4647!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjHCsDI3JzUyLjkiTiA3OMKwMDYnNTEuOCJF!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin",
     workingHours: [
         { day: "Monday - Saturday", timings: "09:00 AM - 02:00 PM & 04:30 PM - 08:30 PM" },
