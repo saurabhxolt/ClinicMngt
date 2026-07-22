@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Container from "@/components/common/Container";
+import ImageUploader from "@/components/common/ImageUploader";
 import { useAuth } from "@/context/AuthContext";
 import { useAppointment } from "@/context/AppointmentContext";
 import { useAdminConfig } from "@/hooks/useAdminConfig";
@@ -76,7 +77,7 @@ export default function AdminDashboard() {
                             <FaUserShield />
                         </div>
                         <h2 className="text-2xl font-extrabold text-slate-900">Clinic Content Admin Login</h2>
-                        <p className="text-xs text-slate-500">Sign in to edit website content, doctors, services, and manage patient bookings.</p>
+                        <p className="text-xs text-slate-500">Sign in to edit website content, upload images, and manage patient bookings.</p>
                     </div>
 
                     {loginError && (
@@ -136,8 +137,8 @@ export default function AdminDashboard() {
                             <FaUserShield />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold">Website Content & Management Portal</h1>
-                            <p className="text-xs text-slate-400">Full Edit Rights Enabled • Skin & Imaging Clinic</p>
+                            <h1 className="text-2xl font-bold">Vandana Diagnostic & Dr. Richa Skin Clinic</h1>
+                            <p className="text-xs text-slate-400">Content & Image Upload Management Workspace</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
@@ -209,7 +210,7 @@ export default function AdminDashboard() {
                     {[
                         { id: "appointments", label: "Appointments" },
                         { id: "clinic", label: "Clinic Branding & Info" },
-                        { id: "doctors", label: "Manage Doctors" },
+                        { id: "doctors", label: "Manage Doctors & Banners" },
                         { id: "services", label: "Manage Services" },
                         { id: "blogs", label: "Manage Blogs" },
                         { id: "testimonials", label: "Manage Reviews" },
@@ -322,7 +323,7 @@ export default function AdminDashboard() {
                     <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-md space-y-6">
                         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                             <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                                <FaBuilding className="text-sky-600" /> Edit Website Clinic Info & Contact Details
+                                <FaBuilding className="text-sky-600" /> Edit Clinic Information & Contact Details
                             </h3>
                             {clinicSaveSuccess && (
                                 <span className="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-lg animate-pulse">
@@ -334,11 +335,20 @@ export default function AdminDashboard() {
                         <form onSubmit={handleClinicSave} className="space-y-4 text-xs">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block font-bold text-slate-700 uppercase mb-1">Clinic Name</label>
+                                    <label className="block font-bold text-slate-700 uppercase mb-1">Clinic Name (English)</label>
                                     <input
                                         type="text"
                                         value={clinicForm.name}
                                         onChange={(e) => setClinicForm({ ...clinicForm, name: e.target.value })}
+                                        className="w-full p-3 rounded-xl border border-slate-200 text-sm bg-slate-50 focus:bg-white focus:ring-2 focus:ring-sky-600"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block font-bold text-slate-700 uppercase mb-1">Clinic Name (Marathi)</label>
+                                    <input
+                                        type="text"
+                                        value={clinicForm.marathiName || ""}
+                                        onChange={(e) => setClinicForm({ ...clinicForm, marathiName: e.target.value })}
                                         className="w-full p-3 rounded-xl border border-slate-200 text-sm bg-slate-50 focus:bg-white focus:ring-2 focus:ring-sky-600"
                                     />
                                 </div>
@@ -378,8 +388,8 @@ export default function AdminDashboard() {
                                         className="w-full p-3 rounded-xl border border-slate-200 text-sm bg-slate-50 focus:bg-white focus:ring-2 focus:ring-sky-600"
                                     />
                                 </div>
-                                <div>
-                                    <label className="block font-bold text-slate-700 uppercase mb-1">Full Physical Address</label>
+                                <div className="sm:col-span-2">
+                                    <label className="block font-bold text-slate-700 uppercase mb-1">Full Clinic Address</label>
                                     <input
                                         type="text"
                                         value={clinicForm.address}
@@ -399,12 +409,12 @@ export default function AdminDashboard() {
                     </div>
                 )}
 
-                {/* TAB 3: MANAGE DOCTORS */}
+                {/* TAB 3: MANAGE DOCTORS & BANNERS */}
                 {adminTab === "doctors" && (
                     <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-md space-y-6">
                         <div className="flex items-center justify-between">
                             <h3 className="text-xl font-bold text-slate-900">
-                                Doctor Profiles Management
+                                Doctor Profiles & Banner Image Upload
                             </h3>
                             <button
                                 onClick={() => setEditingDoctor({ id: Date.now(), name: "", title: "", qualification: "", experience: "", speciality: "", department: "Dermatology", image: "", timings: "", consultationFee: "₹600", rating: 4.9, reviewsCount: 100 })}
@@ -420,7 +430,7 @@ export default function AdminDashboard() {
                                 saveDoctor(editingDoctor);
                                 setEditingDoctor(null);
                             }} className="p-6 rounded-2xl bg-sky-50 border border-sky-200 space-y-4 text-xs">
-                                <h4 className="font-bold text-slate-900 text-sm">{editingDoctor.id ? "Edit Doctor Profile" : "Add Doctor Profile"}</h4>
+                                <h4 className="font-bold text-slate-900 text-sm">{editingDoctor.id ? "Edit Doctor Profile & Banner Image" : "Add Doctor Profile"}</h4>
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                     <div>
                                         <label className="font-bold text-slate-700 uppercase block mb-1">Doctor Name</label>
@@ -449,12 +459,17 @@ export default function AdminDashboard() {
                                         <label className="font-bold text-slate-700 uppercase block mb-1">Consultation Fee</label>
                                         <input type="text" value={editingDoctor.consultationFee} onChange={(e) => setEditingDoctor({ ...editingDoctor, consultationFee: e.target.value })} className="w-full p-2.5 rounded-lg border border-slate-200 bg-white text-xs" />
                                     </div>
+                                    
+                                    {/* Image Uploader Component */}
                                     <div className="sm:col-span-3">
-                                        <label className="font-bold text-slate-700 uppercase block mb-1">Image URL</label>
-                                        <input type="text" value={editingDoctor.image} onChange={(e) => setEditingDoctor({ ...editingDoctor, image: e.target.value })} className="w-full p-2.5 rounded-lg border border-slate-200 bg-white text-xs" />
+                                        <ImageUploader
+                                            label="Doctor Photo or Official Clinic Poster Banner"
+                                            value={editingDoctor.image}
+                                            onChange={(img) => setEditingDoctor({ ...editingDoctor, image: img })}
+                                        />
                                     </div>
                                 </div>
-                                <div className="flex gap-2 justify-end">
+                                <div className="flex gap-2 justify-end pt-2">
                                     <button type="button" onClick={() => setEditingDoctor(null)} className="px-4 py-2 bg-slate-200 font-bold rounded-lg">Cancel</button>
                                     <button type="submit" className="px-4 py-2 bg-sky-700 text-white font-bold rounded-lg">Save Doctor</button>
                                 </div>
@@ -465,7 +480,7 @@ export default function AdminDashboard() {
                             {config.doctors.map(doc => (
                                 <div key={doc.id} className="p-5 rounded-2xl border border-slate-200 flex gap-4 items-center justify-between">
                                     <div className="flex gap-4 items-center">
-                                        <img src={doc.image} alt={doc.name} className="h-20 w-20 rounded-xl object-cover" />
+                                        <img src={doc.image} alt={doc.name} className="h-24 w-24 rounded-xl object-cover object-top border-2 border-sky-100 shadow-sm" />
                                         <div className="space-y-1">
                                             <span className="text-[10px] font-bold uppercase text-sky-700 bg-sky-50 px-2 py-0.5 rounded">
                                                 {doc.department}
@@ -527,8 +542,15 @@ export default function AdminDashboard() {
                                         <label className="font-bold text-slate-700 uppercase block mb-1">Short Description</label>
                                         <input type="text" required value={editingService.shortDesc} onChange={(e) => setEditingService({ ...editingService, shortDesc: e.target.value })} className="w-full p-2.5 rounded-lg border border-slate-200 bg-white text-xs" />
                                     </div>
+                                    <div className="sm:col-span-2">
+                                        <ImageUploader
+                                            label="Service Image"
+                                            value={editingService.image}
+                                            onChange={(img) => setEditingService({ ...editingService, image: img })}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="flex gap-2 justify-end">
+                                <div className="flex gap-2 justify-end pt-2">
                                     <button type="button" onClick={() => setEditingService(null)} className="px-4 py-2 bg-slate-200 font-bold rounded-lg">Cancel</button>
                                     <button type="submit" className="px-4 py-2 bg-teal-700 text-white font-bold rounded-lg">Save Service</button>
                                 </div>
@@ -563,7 +585,7 @@ export default function AdminDashboard() {
                                 Health Articles & Blog Manager
                             </h3>
                             <button
-                                onClick={() => setEditingBlog({ id: Date.now(), title: "", category: "Skin Diseases", author: "Dr. Richa Rokade", date: "July 2026", readTime: "5 min read", summary: "", content: "", image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&q=80&w=600" })}
+                                onClick={() => setEditingBlog({ id: Date.now(), title: "", category: "Skin Diseases", author: "Dr. Richa Rokade Bijwe", date: "July 2026", readTime: "5 min read", summary: "", content: "", image: "" })}
                                 className="flex items-center gap-2 bg-indigo-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md"
                             >
                                 <FaPlus /> Add New Blog Post
@@ -595,8 +617,15 @@ export default function AdminDashboard() {
                                         <label className="font-bold text-slate-700 uppercase block mb-1">Summary</label>
                                         <input type="text" required value={editingBlog.summary} onChange={(e) => setEditingBlog({ ...editingBlog, summary: e.target.value })} className="w-full p-2.5 rounded-lg border border-slate-200 bg-white text-xs" />
                                     </div>
+                                    <div className="sm:col-span-2">
+                                        <ImageUploader
+                                            label="Cover Image"
+                                            value={editingBlog.image}
+                                            onChange={(img) => setEditingBlog({ ...editingBlog, image: img })}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="flex gap-2 justify-end">
+                                <div className="flex gap-2 justify-end pt-2">
                                     <button type="button" onClick={() => setEditingBlog(null)} className="px-4 py-2 bg-slate-200 font-bold rounded-lg">Cancel</button>
                                     <button type="submit" className="px-4 py-2 bg-indigo-700 text-white font-bold rounded-lg">Save Article</button>
                                 </div>
@@ -631,7 +660,7 @@ export default function AdminDashboard() {
                                 Patient Testimonials & Reviews
                             </h3>
                             <button
-                                onClick={() => setEditingTestimonial({ id: Date.now(), name: "", treatment: "Acne Scar Revision", doctor: "Dr. Richa Rokade", rating: 5, review: "", verified: true, image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200" })}
+                                onClick={() => setEditingTestimonial({ id: Date.now(), name: "", treatment: "Acne Scar Revision", doctor: "Dr. Richa Rokade Bijwe", rating: 5, review: "", verified: true, image: "" })}
                                 className="flex items-center gap-2 bg-amber-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md"
                             >
                                 <FaPlus /> Add New Patient Review
@@ -658,8 +687,15 @@ export default function AdminDashboard() {
                                         <label className="font-bold text-slate-700 uppercase block mb-1">Review Text</label>
                                         <textarea rows="3" required value={editingTestimonial.review} onChange={(e) => setEditingTestimonial({ ...editingTestimonial, review: e.target.value })} className="w-full p-2.5 rounded-lg border border-slate-200 bg-white text-xs"></textarea>
                                     </div>
+                                    <div className="sm:col-span-2">
+                                        <ImageUploader
+                                            label="Patient Photo"
+                                            value={editingTestimonial.image}
+                                            onChange={(img) => setEditingTestimonial({ ...editingTestimonial, image: img })}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="flex gap-2 justify-end">
+                                <div className="flex gap-2 justify-end pt-2">
                                     <button type="button" onClick={() => setEditingTestimonial(null)} className="px-4 py-2 bg-slate-200 font-bold rounded-lg">Cancel</button>
                                     <button type="submit" className="px-4 py-2 bg-amber-600 text-white font-bold rounded-lg">Save Review</button>
                                 </div>
@@ -723,7 +759,7 @@ export default function AdminDashboard() {
                                         <textarea rows="3" required value={editingFaq.answer} onChange={(e) => setEditingFaq({ ...editingFaq, answer: e.target.value })} className="w-full p-2.5 rounded-lg border border-slate-200 bg-white text-xs"></textarea>
                                     </div>
                                 </div>
-                                <div className="flex gap-2 justify-end">
+                                <div className="flex gap-2 justify-end pt-2">
                                     <button type="button" onClick={() => setEditingFaq(null)} className="px-4 py-2 bg-slate-200 font-bold rounded-lg">Cancel</button>
                                     <button type="submit" className="px-4 py-2 bg-sky-700 text-white font-bold rounded-lg">Save FAQ</button>
                                 </div>
