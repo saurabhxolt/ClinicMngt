@@ -3,7 +3,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import initialSiteConfig from '../data/siteConfig';
 
 const SiteConfigContext = createContext(null);
-const CONFIG_VERSION = "v3_warud_official";
+const CONFIG_VERSION = "v4_warud_gallery_complete";
 
 export function SiteConfigProvider({ children }) {
     const [config, setConfig] = useState(() => {
@@ -153,6 +153,28 @@ export function SiteConfigProvider({ children }) {
         }));
     };
 
+    // Gallery CRUD
+    const saveGalleryItem = (item) => {
+        setConfig(prev => {
+            const exists = prev.gallery.some(g => g.id === item.id);
+            let updatedGallery;
+            if (exists) {
+                updatedGallery = prev.gallery.map(g => g.id === item.id ? item : g);
+            } else {
+                const newId = item.id || Date.now();
+                updatedGallery = [...prev.gallery, { ...item, id: newId }];
+            }
+            return { ...prev, gallery: updatedGallery };
+        });
+    };
+
+    const deleteGalleryItem = (id) => {
+        setConfig(prev => ({
+            ...prev,
+            gallery: prev.gallery.filter(g => g.id !== id)
+        }));
+    };
+
     // Factory Reset
     const resetToFactoryDefault = () => {
         setConfig(initialSiteConfig);
@@ -175,6 +197,8 @@ export function SiteConfigProvider({ children }) {
             deleteTestimonial,
             saveFaq,
             deleteFaq,
+            saveGalleryItem,
+            deleteGalleryItem,
             resetToFactoryDefault
         }}>
             {children}
@@ -199,6 +223,8 @@ export function useSiteConfig() {
             deleteTestimonial: () => {},
             saveFaq: () => {},
             deleteFaq: () => {},
+            saveGalleryItem: () => {},
+            deleteGalleryItem: () => {},
             resetToFactoryDefault: () => {}
         };
     }

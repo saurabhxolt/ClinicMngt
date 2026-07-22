@@ -1,17 +1,20 @@
 import { useState } from "react";
 import Container from "@/components/common/Container";
-import galleryItems from "@/data/gallery";
+import { useSiteConfig } from "@/context/SiteConfigContext";
 import { FaTimes, FaExpand } from "react-icons/fa";
 
 export default function Gallery() {
+    const { config } = useSiteConfig();
+    const galleryItems = config.gallery;
+
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [lightboxItem, setLightboxItem] = useState(null);
 
-    const categories = ["All", "Clinic", "Equipment", "Doctors"];
+    const categories = ["All", "Clinic & OPD", "Laser & Cosmetic Procedures", "Ultrasound & X-Ray Equipment", "Patient Care"];
 
     const filteredItems = selectedCategory === "All"
         ? galleryItems
-        : galleryItems.filter(item => item.category === selectedCategory);
+        : galleryItems.filter(item => item.category === selectedCategory || selectedCategory === "All");
 
     return (
         <div className="py-12 bg-slate-50 min-h-screen">
@@ -22,20 +25,20 @@ export default function Gallery() {
                         Clinic Showcase
                     </span>
                     <h1 className="text-4xl font-extrabold text-slate-900">
-                        Facility & Infrastructure Gallery
+                        Facility & Equipment Gallery
                     </h1>
                     <p className="text-slate-600 text-sm">
-                        Take a virtual tour of our sterile procedure suites, state-of-the-art diagnostic radiology equipment, and executive patient lounge.
+                        Explore our medical infrastructure, high-resolution Samsung HS 50 4D ultrasound, 300 MA X-ray, and US-FDA aesthetic laser procedure rooms.
                     </p>
                 </div>
 
                 {/* Category Filter */}
-                <div className="flex justify-center gap-3 mb-10 flex-wrap">
+                <div className="flex justify-center gap-2 sm:gap-3 mb-10 flex-wrap">
                     {categories.map((cat) => (
                         <button
                             key={cat}
                             onClick={() => setSelectedCategory(cat)}
-                            className={`px-6 py-2.5 rounded-xl font-bold text-xs transition-all ${
+                            className={`px-5 py-2.5 rounded-xl font-bold text-xs transition-all ${
                                 selectedCategory === cat
                                     ? "bg-sky-700 text-white shadow-md shadow-sky-700/20"
                                     : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
@@ -54,7 +57,7 @@ export default function Gallery() {
                             onClick={() => setLightboxItem(item)}
                             className="bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-md hover:shadow-xl transition-all cursor-pointer group relative"
                         >
-                            <div className="relative h-64 overflow-hidden">
+                            <div className="relative h-64 overflow-hidden bg-slate-900">
                                 <img
                                     src={item.image}
                                     alt={item.title}
@@ -96,7 +99,7 @@ export default function Gallery() {
                             <img
                                 src={lightboxItem.image}
                                 alt={lightboxItem.title}
-                                className="w-full h-[60vh] object-cover"
+                                className="w-full h-[60vh] object-contain bg-slate-950"
                             />
 
                             <div className="p-6 text-white space-y-2">

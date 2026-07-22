@@ -4,7 +4,7 @@ import ImageUploader from "@/components/common/ImageUploader";
 import { useAuth } from "@/context/AuthContext";
 import { useAppointment } from "@/context/AppointmentContext";
 import { useAdminConfig } from "@/hooks/useAdminConfig";
-import { FaUserShield, FaCalendarCheck, FaUserMd, FaHospital, FaBookOpen, FaSignOutAlt, FaLock, FaEdit, FaPlus, FaTrash, FaSave, FaUndo, FaStar, FaBuilding } from "react-icons/fa";
+import { FaUserShield, FaCalendarCheck, FaUserMd, FaHospital, FaSignOutAlt, FaLock, FaEdit, FaPlus, FaTrash, FaSave, FaUndo, FaStar, FaBuilding, FaImages } from "react-icons/fa";
 
 export default function AdminDashboard() {
     const { isAdminLoggedIn, loginAdmin, logoutAdmin } = useAuth();
@@ -22,6 +22,8 @@ export default function AdminDashboard() {
         deleteTestimonial,
         saveFaq,
         deleteFaq,
+        saveGalleryItem,
+        deleteGalleryItem,
         resetToFactoryDefault
     } = useAdminConfig();
 
@@ -31,7 +33,7 @@ export default function AdminDashboard() {
     const [loginError, setLoginError] = useState("");
 
     // Active Admin Navigation Tab
-    const [adminTab, setAdminTab] = useState("appointments"); // "appointments" | "clinic" | "doctors" | "services" | "blogs" | "testimonials" | "faqs"
+    const [adminTab, setAdminTab] = useState("appointments"); // "appointments" | "clinic" | "doctors" | "services" | "blogs" | "testimonials" | "faqs" | "gallery"
 
     // Filter appointments
     const [statusFilter, setStatusFilter] = useState("All");
@@ -42,6 +44,7 @@ export default function AdminDashboard() {
     const [editingBlog, setEditingBlog] = useState(null);
     const [editingTestimonial, setEditingTestimonial] = useState(null);
     const [editingFaq, setEditingFaq] = useState(null);
+    const [editingGalleryItem, setEditingGalleryItem] = useState(null);
 
     // Clinic Info Local Form State
     const [clinicForm, setClinicForm] = useState(() => ({ ...config.clinic }));
@@ -77,7 +80,7 @@ export default function AdminDashboard() {
                             <FaUserShield />
                         </div>
                         <h2 className="text-2xl font-extrabold text-slate-900">Clinic Content Admin Login</h2>
-                        <p className="text-xs text-slate-500">Sign in to edit website content, upload images, and manage patient bookings.</p>
+                        <p className="text-xs text-slate-500">Sign in to edit website content, upload gallery photos, and manage patient bookings.</p>
                     </div>
 
                     {loginError && (
@@ -138,7 +141,7 @@ export default function AdminDashboard() {
                         </div>
                         <div>
                             <h1 className="text-2xl font-bold">Vandana Diagnostic & Dr. Richa Skin Clinic</h1>
-                            <p className="text-xs text-slate-400">Content & Image Upload Management Workspace</p>
+                            <p className="text-xs text-slate-400">Content, Photos & Patient Bookings Management Portal</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
@@ -196,11 +199,11 @@ export default function AdminDashboard() {
 
                     <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-md flex items-center justify-between">
                         <div>
-                            <span className="text-xs font-bold text-slate-500 uppercase">Published Blogs</span>
-                            <div className="text-3xl font-extrabold text-slate-900 mt-1">{config.blogs.length}</div>
+                            <span className="text-xs font-bold text-slate-500 uppercase">Gallery Photos</span>
+                            <div className="text-3xl font-extrabold text-slate-900 mt-1">{config.gallery.length}</div>
                         </div>
                         <div className="h-12 w-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl">
-                            <FaBookOpen />
+                            <FaImages />
                         </div>
                     </div>
                 </div>
@@ -210,7 +213,8 @@ export default function AdminDashboard() {
                     {[
                         { id: "appointments", label: "Appointments" },
                         { id: "clinic", label: "Clinic Branding & Info" },
-                        { id: "doctors", label: "Manage Doctors & Banners" },
+                        { id: "doctors", label: "Doctors & Photos" },
+                        { id: "gallery", label: "Manage Gallery Photos" },
                         { id: "services", label: "Manage Services" },
                         { id: "blogs", label: "Manage Blogs" },
                         { id: "testimonials", label: "Manage Reviews" },
@@ -414,7 +418,7 @@ export default function AdminDashboard() {
                     <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-md space-y-6">
                         <div className="flex items-center justify-between">
                             <h3 className="text-xl font-bold text-slate-900">
-                                Doctor Profiles & Banner Image Upload
+                                Doctor Profiles & Portrait Photo Upload
                             </h3>
                             <button
                                 onClick={() => setEditingDoctor({ id: Date.now(), name: "", title: "", qualification: "", experience: "", speciality: "", department: "Dermatology", image: "", timings: "", consultationFee: "₹600", rating: 4.9, reviewsCount: 100 })}
@@ -430,7 +434,7 @@ export default function AdminDashboard() {
                                 saveDoctor(editingDoctor);
                                 setEditingDoctor(null);
                             }} className="p-6 rounded-2xl bg-sky-50 border border-sky-200 space-y-4 text-xs">
-                                <h4 className="font-bold text-slate-900 text-sm">{editingDoctor.id ? "Edit Doctor Profile & Banner Image" : "Add Doctor Profile"}</h4>
+                                <h4 className="font-bold text-slate-900 text-sm">{editingDoctor.id ? "Edit Doctor Profile & Photo" : "Add Doctor Profile"}</h4>
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                     <div>
                                         <label className="font-bold text-slate-700 uppercase block mb-1">Doctor Name</label>
@@ -463,7 +467,7 @@ export default function AdminDashboard() {
                                     {/* Image Uploader Component */}
                                     <div className="sm:col-span-3">
                                         <ImageUploader
-                                            label="Doctor Photo or Official Clinic Poster Banner"
+                                            label="Doctor Portrait Photo / Official Banner"
                                             value={editingDoctor.image}
                                             onChange={(img) => setEditingDoctor({ ...editingDoctor, image: img })}
                                         />
@@ -504,7 +508,85 @@ export default function AdminDashboard() {
                     </div>
                 )}
 
-                {/* TAB 4: MANAGE SERVICES */}
+                {/* TAB 4: MANAGE GALLERY PHOTOS */}
+                {adminTab === "gallery" && (
+                    <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-md space-y-6">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                                <FaImages className="text-amber-600" /> Clinic Gallery & Equipment Photo Manager
+                            </h3>
+                            <button
+                                onClick={() => setEditingGalleryItem({ id: Date.now(), title: "", category: "Clinic & OPD", description: "", image: "" })}
+                                className="flex items-center gap-2 bg-amber-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md"
+                            >
+                                <FaPlus /> Add New Gallery Photo
+                            </button>
+                        </div>
+
+                        {editingGalleryItem && (
+                            <form onSubmit={(e) => {
+                                e.preventDefault();
+                                saveGalleryItem(editingGalleryItem);
+                                setEditingGalleryItem(null);
+                            }} className="p-6 rounded-2xl bg-amber-50 border border-amber-200 space-y-4 text-xs">
+                                <h4 className="font-bold text-slate-900 text-sm">Gallery Image Details</h4>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label className="font-bold text-slate-700 uppercase block mb-1">Photo Title</label>
+                                        <input type="text" required value={editingGalleryItem.title} onChange={(e) => setEditingGalleryItem({ ...editingGalleryItem, title: e.target.value })} className="w-full p-2.5 rounded-lg border border-slate-200 bg-white text-xs" />
+                                    </div>
+                                    <div>
+                                        <label className="font-bold text-slate-700 uppercase block mb-1">Category</label>
+                                        <select value={editingGalleryItem.category} onChange={(e) => setEditingGalleryItem({ ...editingGalleryItem, category: e.target.value })} className="w-full p-2.5 rounded-lg border border-slate-200 bg-white text-xs">
+                                            <option value="Clinic & OPD">Clinic & OPD</option>
+                                            <option value="Laser & Cosmetic Procedures">Laser & Cosmetic Procedures</option>
+                                            <option value="Ultrasound & X-Ray Equipment">Ultrasound & X-Ray Equipment</option>
+                                            <option value="Patient Care">Patient Care</option>
+                                        </select>
+                                    </div>
+                                    <div className="sm:col-span-2">
+                                        <label className="font-bold text-slate-700 uppercase block mb-1">Short Description</label>
+                                        <input type="text" value={editingGalleryItem.description} onChange={(e) => setEditingGalleryItem({ ...editingGalleryItem, description: e.target.value })} className="w-full p-2.5 rounded-lg border border-slate-200 bg-white text-xs" />
+                                    </div>
+                                    <div className="sm:col-span-2">
+                                        <ImageUploader
+                                            label="Gallery Image File"
+                                            value={editingGalleryItem.image}
+                                            onChange={(img) => setEditingGalleryItem({ ...editingGalleryItem, image: img })}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex gap-2 justify-end pt-2">
+                                    <button type="button" onClick={() => setEditingGalleryItem(null)} className="px-4 py-2 bg-slate-200 font-bold rounded-lg">Cancel</button>
+                                    <button type="submit" className="px-4 py-2 bg-amber-600 text-white font-bold rounded-lg">Save Photo to Gallery</button>
+                                </div>
+                            </form>
+                        )}
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                            {config.gallery.map(item => (
+                                <div key={item.id} className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm flex flex-col justify-between">
+                                    <div className="h-44 overflow-hidden relative bg-slate-900">
+                                        <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                                        <span className="absolute top-2 left-2 bg-slate-950/80 text-white text-[10px] font-bold px-2 py-0.5 rounded">
+                                            {item.category}
+                                        </span>
+                                    </div>
+                                    <div className="p-4 space-y-2">
+                                        <h5 className="font-bold text-slate-900 text-sm">{item.title}</h5>
+                                        <p className="text-xs text-slate-500">{item.description}</p>
+                                        <div className="flex gap-2 pt-2 border-t border-slate-100 justify-end">
+                                            <button onClick={() => setEditingGalleryItem(item)} className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold flex items-center gap-1"><FaEdit /> Edit</button>
+                                            <button onClick={() => { if (confirm(`Delete gallery image ${item.title}?`)) deleteGalleryItem(item.id); }} className="px-3 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg text-xs font-bold flex items-center gap-1"><FaTrash /> Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* TAB 5: MANAGE SERVICES */}
                 {adminTab === "services" && (
                     <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-md space-y-6">
                         <div className="flex items-center justify-between">
@@ -577,7 +659,7 @@ export default function AdminDashboard() {
                     </div>
                 )}
 
-                {/* TAB 5: MANAGE BLOGS */}
+                {/* TAB 6: MANAGE BLOGS */}
                 {adminTab === "blogs" && (
                     <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-md space-y-6">
                         <div className="flex items-center justify-between">
@@ -652,7 +734,7 @@ export default function AdminDashboard() {
                     </div>
                 )}
 
-                {/* TAB 6: MANAGE TESTIMONIALS */}
+                {/* TAB 7: MANAGE TESTIMONIALS */}
                 {adminTab === "testimonials" && (
                     <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-md space-y-6">
                         <div className="flex items-center justify-between">
@@ -723,7 +805,7 @@ export default function AdminDashboard() {
                     </div>
                 )}
 
-                {/* TAB 7: MANAGE FAQS */}
+                {/* TAB 8: MANAGE FAQS */}
                 {adminTab === "faqs" && (
                     <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-md space-y-6">
                         <div className="flex items-center justify-between">

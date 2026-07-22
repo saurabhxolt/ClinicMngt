@@ -19,6 +19,8 @@ export function useAdminConfig() {
         deleteTestimonial,
         saveFaq,
         deleteFaq,
+        saveGalleryItem,
+        deleteGalleryItem,
         resetToFactoryDefault
     } = useSiteConfig();
 
@@ -45,6 +47,8 @@ export function useAdminConfig() {
         deleteTestimonial,
         saveFaq,
         deleteFaq,
+        saveGalleryItem,
+        deleteGalleryItem,
         resetToFactoryDefault
     };
 }

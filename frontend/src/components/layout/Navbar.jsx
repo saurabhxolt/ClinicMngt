@@ -18,17 +18,17 @@ export default function Navbar() {
 
             <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-md shadow-sm">
                 <Container>
-                    <div className="flex h-20 items-center justify-between">
+                    <div className="flex h-20 items-center justify-between gap-4">
                         <Logo />
 
                         {/* Desktop Navigation */}
-                        <nav className="hidden items-center gap-6 xl:gap-8 lg:flex">
+                        <nav className="hidden items-center gap-3 lg:gap-4 xl:gap-5 lg:flex">
                             {NAVIGATION.map((item) => (
                                 <NavLink
                                     key={item.path}
                                     to={item.path}
                                     className={({ isActive }) =>
-                                        `text-sm font-semibold transition-colors py-2 border-b-2 ${
+                                        `text-[13px] font-semibold transition-colors py-1.5 border-b-2 whitespace-nowrap ${
                                             isActive
                                                 ? "border-sky-600 text-sky-700"
                                                 : "border-transparent text-slate-700 hover:text-sky-600 hover:border-slate-300"
@@ -41,10 +41,10 @@ export default function Navbar() {
                         </nav>
 
                         {/* Right CTAs */}
-                        <div className="hidden lg:flex items-center gap-3">
+                        <div className="hidden lg:flex items-center gap-3 shrink-0">
                             <Link to="/appointment">
-                                <Button className="flex items-center gap-2 bg-gradient-to-r from-sky-600 to-teal-600 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-sky-600/20 hover:shadow-lg hover:shadow-sky-600/30 transition-all">
-                                    <FaCalendarCheck className="text-sm" /> Book Appointment
+                                <Button className="flex items-center gap-2 bg-gradient-to-r from-sky-600 to-teal-600 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-sky-600/20 hover:shadow-lg hover:shadow-sky-600/30 transition-all">
+                                    <FaCalendarCheck className="text-xs" /> Book Appointment
                                 </Button>
                             </Link>
                         </div>
@@ -55,7 +55,7 @@ export default function Navbar() {
                             className="lg:hidden p-2.5 text-slate-700 hover:text-sky-700 hover:bg-slate-100 rounded-lg transition-colors"
                             aria-label="Toggle menu"
                         >
-                            {mobileMenuOpen ? <FaTimes className="text-2xl" /> : <FaBars className="text-2xl" />}
+                            {mobileMenuOpen ? <FaTimes className="text-xl" /> : <FaBars className="text-xl" />}
                         </button>
                     </div>
                 </Container>
